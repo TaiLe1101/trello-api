@@ -1,13 +1,17 @@
 import express from "express";
+import * as dotenv from "dotenv";
+
 import { mapOrder } from "~/utils/sorts.js";
 
 const app = express();
+dotenv.config();
 
-const hostname = "localhost";
-const port = 8017;
+const hostname = process.env.APP_HOST || "localhost";
+const port = process.env.APP_PORT || 2000;
 
 app.get("/", (req, res) => {
   // Test Absolute import mapOrder
+  // eslint-disable-next-line no-console
   console.log(
     mapOrder(
       [
@@ -26,5 +30,8 @@ app.get("/", (req, res) => {
 
 app.listen(port, hostname, () => {
   // eslint-disable-next-line no-console
-  console.log(`Hello DevT, Server is running at ${hostname}:${port}/`);
+  console.log(
+    "[INFO] 👉",
+    `Hello DevT, Server is running at http://${hostname}:${port}/`
+  );
 });

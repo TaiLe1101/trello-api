@@ -1,12 +1,17 @@
 {
   "Trello API | Logger Text (INFO)": {
     "prefix": "logi",
-    "body": ["console.log(\"[INFO] 👉\", \"${1:Test}\")"],
+    "body": ["console.log(\"[INFO] 👉\", `${1:Test}`)"],
     "description": "Tai Le | Logger Text"
   },
   "Trello API | Logger Text (LOGGER)": {
     "prefix": "logl",
-    "body": ["console.log(\"[LOGGER] 👉\", \"${1:Test}\")"],
+    "body": ["console.log(\"[LOGGER] 👉\", `${1:Test}`)"],
+    "description": "Tai Le | Logger Text"
+  },
+  "Trello API | Logger Text (ERROR)": {
+    "prefix": "logi",
+    "body": ["console.log(\"[ERROR] 👉\", `${1:Test}`)"],
     "description": "Tai Le | Logger Text"
   }
 }

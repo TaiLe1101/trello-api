@@ -1,11 +1,11 @@
 // DevT | mongodb file
 import { MongoClient, ServerApiVersion } from "mongodb";
-import * as dotenv from "dotenv";
-dotenv.config();
+
+import { env } from "./environment";
 
 let trelloDatabaseInstance = null;
 
-const mongoClientInstance = new MongoClient(process.env.MONGODB_URI, {
+const mongoClientInstance = new MongoClient(env.MONGODB_URI, {
   serverApi: {
     version: ServerApiVersion.v1,
     strict: true,
@@ -16,7 +16,7 @@ const mongoClientInstance = new MongoClient(process.env.MONGODB_URI, {
 export const CONNECT_DB = async () => {
   await mongoClientInstance.connect();
 
-  trelloDatabaseInstance = mongoClientInstance.db(process.env.DATABASE_NAME);
+  trelloDatabaseInstance = mongoClientInstance.db(env.DATABASE_NAME);
 };
 
 export const GET_DB = () => {

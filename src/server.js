@@ -1,16 +1,15 @@
 /* eslint-disable no-console */
 import exitHook from "async-exit-hook";
-import * as dotenv from "dotenv";
 import express from "express";
 
+import { env } from "./config/environment";
 import { CLOSE_DB, CONNECT_DB, GET_DB } from "./config/mongodb";
 
 const START_SERVER = () => {
   const app = express();
-  dotenv.config();
 
-  const hostname = process.env.APP_HOST || "localhost";
-  const port = process.env.APP_PORT || 2000;
+  const hostname = env.APP_HOST || "localhost";
+  const port = env.APP_PORT || 2000;
 
   app.get("/", async (req, res) => {
     // Test Absolute import mapOrder
@@ -21,7 +20,7 @@ const START_SERVER = () => {
   app.listen(port, hostname, () => {
     console.log(
       "[INFO] 👉",
-      `Hello DevT, Server is running at http://${hostname}:${port} ✅`
+      `Hello ${env.AUTHOR}, Server is running at http://${hostname}:${port} ✅`
     );
   });
 

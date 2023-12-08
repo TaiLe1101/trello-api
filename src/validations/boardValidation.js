@@ -1,8 +1,9 @@
 // DevT | exampleValidation file
 import Joi from "joi";
 import { StatusCodes } from "http-status-codes";
+import ApiError from "~/utils/ApiError";
 
-const createNew = async (req, res) => {
+const createNew = async (req, res, next) => {
   try {
     const correctCondition = Joi.object({
       title: Joi.string().required().min(3).max(50).trim().strict(),
@@ -11,14 +12,14 @@ const createNew = async (req, res) => {
 
     await correctCondition.validateAsync(req.body, { abortEarly: false });
 
-    return res
-      .status(StatusCodes.CREATED)
-      .json({ message: "Post Board Route" });
+    next();
   } catch (error) {
-    console.log("[ERROR] 👉", error);
-    return res
-      .status(StatusCodes.UNPROCESSABLE_ENTITY)
-      .json({ errors: new Error(error).message });
+    const errorMessages = new Error(error).message;
+    const apiError = new ApiError(
+      StatusCodes.UNPROCESSABLE_ENTITY,
+      errorMessages
+    );
+    next(apiError);
   }
 };
 

@@ -20,7 +20,7 @@ const START_SERVER = () => {
   app.listen(port, hostname, () => {
     console.log(
       "[INFO] 👉",
-      `Hello ${env.AUTHOR}, Server is running at http://${hostname}:${port} - ENV: ${env.ENV} ✅`
+      `Hello ${env.AUTHOR}, Server is running at http://${hostname}:${port} - BUILD_MODE: ${env.BUILD_MODE} ✅`
     );
   });
 

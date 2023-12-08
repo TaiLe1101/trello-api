@@ -3,5 +3,5 @@
 import { env } from "~/config/environment";
 
 export const constants = {
-  __PROD__: env.ENV === "production",
+  __PROD__: env.BUILD_MODE === "production",
 };

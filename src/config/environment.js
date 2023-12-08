@@ -7,4 +7,5 @@ export const env = {
   APP_HOST: process.env.APP_HOST,
   APP_PORT: Number(process.env.APP_PORT),
   AUTHOR: process.env.AUTHOR,
+  ENV: process.env.ENV,
 };

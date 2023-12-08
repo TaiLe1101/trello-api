@@ -4,6 +4,8 @@ import express from "express";
 
 import { env } from "./config/environment";
 import { CLOSE_DB, CONNECT_DB, GET_DB } from "./config/mongodb";
+import { APIsV1 } from "~/routes/v1";
+import { StatusCodes } from "http-status-codes";
 
 const START_SERVER = () => {
   const app = express();
@@ -11,10 +13,13 @@ const START_SERVER = () => {
   const hostname = env.APP_HOST || "localhost";
   const port = env.APP_PORT || 2000;
 
-  app.get("/", async (req, res) => {
-    // Test Absolute import mapOrder
-    console.log(await GET_DB().listCollections().toArray());
-    res.end("<h1>Hello World!</h1><hr>");
+  app.use(express.json());
+  app.use("/v1", APIsV1);
+
+  app.get("/", (req, res) => {
+    return res.status(StatusCodes.OK).json({
+      message: `Welcome to app by ${env.AUTHOR}, go to route v1 and use app`,
+    });
   });
 
   app.listen(port, hostname, () => {

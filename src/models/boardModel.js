@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { constants } from "~/utils/constants";
+import { OBJECT_ID_RULE, OBJECT_ID_RULE_MESSAGE } from "~/utils/constants";
 
 // Define Collection (name & schema)
 const BOARD_COLLECTION_NAME = "boards";
@@ -9,11 +9,7 @@ const BOARD_COLLECTION_SCHEMA = Joi.object({
   description: Joi.string().required().min(3).max(256).trim().strict(),
 
   columnOrderIds: Joi.array()
-    .items(
-      Joi.string()
-        .pattern(constants.OBJECT_ID_RULE)
-        .message(constants.OBJECT_ID_RULE_MESSAGE)
-    )
+    .items(Joi.string().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE))
     .default([]),
 
   createdAt: Joi.date().timestamp("javascript").default(Date.now),

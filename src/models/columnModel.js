@@ -1,21 +1,17 @@
 import Joi from "joi";
-import { constants } from "~/utils/constants";
+import { OBJECT_ID_RULE, OBJECT_ID_RULE_MESSAGE } from "~/utils/constants";
 
 // Define Collection (name & schema)
 const COLUMN_COLLECTION_NAME = "columns";
 const COLUMN_COLLECTION_SCHEMA = Joi.object({
   boardId: Joi.string()
     .required()
-    .pattern(constants.OBJECT_ID_RULE)
-    .message(constants.OBJECT_ID_RULE_MESSAGE),
+    .pattern(OBJECT_ID_RULE)
+    .message(OBJECT_ID_RULE_MESSAGE),
   title: Joi.string().required().min(3).max(50).trim().strict(),
 
   cardOrderIds: Joi.array()
-    .items(
-      Joi.string()
-        .pattern(constants.OBJECT_ID_RULE)
-        .message(constants.OBJECT_ID_RULE_MESSAGE)
-    )
+    .items(Joi.string().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE))
     .default([]),
 
   createdAt: Joi.date().timestamp("javascript").default(Date.now),

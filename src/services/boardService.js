@@ -1,5 +1,7 @@
 /* eslint-disable no-useless-catch */
+import { StatusCodes } from "http-status-codes";
 import { boardRepository } from "~/repositories/boardRepository";
+import ApiError from "~/utils/ApiError";
 import { slugify } from "~/utils/formatters";
 
 const getAllBoards = async () => {
@@ -26,7 +28,19 @@ const createNew = async (reqBody) => {
   }
 };
 
+const getDetail = async (boardId) => {
+  try {
+    const board = await boardRepository.getDetail(boardId);
+    if (!board) throw new ApiError(StatusCodes.NOT_FOUND, "Board not found");
+
+    return board;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const boardService = {
   createNew,
   getAllBoards,
+  getDetail,
 };

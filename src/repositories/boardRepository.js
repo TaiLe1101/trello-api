@@ -44,8 +44,20 @@ const findOneById = async (id) => {
   }
 };
 
+const getDetail = async (boardId) => {
+  try {
+    const board = await GET_DB()
+      .collection(boardModel.BOARD_COLLECTION_NAME)
+      .findOne({ _id: new ObjectId(boardId) });
+    return board;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 export const boardRepository = {
   createNew,
   findOneById,
   getAllBoards,
+  getDetail,
 };

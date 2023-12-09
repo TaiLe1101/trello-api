@@ -3,6 +3,15 @@
 import { StatusCodes } from "http-status-codes";
 import { boardService } from "~/services/boardService";
 
+const getAllBoards = async (req, res, next) => {
+  try {
+    const boards = await boardService.getAllBoards();
+    return res.status(StatusCodes.OK).json(boards);
+  } catch (error) {
+    next(error);
+  }
+};
+
 const createNew = async (req, res, next) => {
   try {
     const createdBoard = await boardService.createNew(req.body);
@@ -15,4 +24,5 @@ const createNew = async (req, res, next) => {
 
 export const boardController = {
   createNew,
+  getAllBoards,
 };

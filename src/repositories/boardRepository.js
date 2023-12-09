@@ -3,6 +3,19 @@ import { GET_DB } from "~/config/mongodb";
 import { boardModel } from "~/models/boardModel";
 import { modelValidate } from "~/validations/modelValidation";
 
+const getAllBoards = async () => {
+  try {
+    const boards = await GET_DB()
+      .collection(boardModel.BOARD_COLLECTION_NAME)
+      .find()
+      .toArray();
+
+    return boards;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 const createNew = async (data) => {
   try {
     const validData = await modelValidate.validateBeforeCreate(
@@ -34,4 +47,5 @@ const findOneById = async (id) => {
 export const boardRepository = {
   createNew,
   findOneById,
+  getAllBoards,
 };

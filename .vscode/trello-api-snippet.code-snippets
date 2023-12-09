@@ -10,8 +10,8 @@
     "description": "Tai Le | Logger Text"
   },
   "Trello API | Logger Text (ERROR)": {
-    "prefix": "logi",
-    "body": ["console.log(\"[ERROR] 👉\", `${1:Test}`)"],
+    "prefix": "loge",
+    "body": ["console.error(\"[ERROR] 👉\", `${1:Test}`)"],
     "description": "Tai Le | Logger Text"
   }
 }

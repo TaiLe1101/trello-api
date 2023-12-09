@@ -1,6 +1,8 @@
 import { ObjectId } from "mongodb";
 import { GET_DB } from "~/config/mongodb";
 import { boardModel } from "~/models/boardModel";
+import { cardModel } from "~/models/cardModel";
+import { columnModel } from "~/models/columnModel";
 import { modelValidate } from "~/validations/modelValidation";
 
 const getAllBoards = async () => {
@@ -48,8 +50,32 @@ const getDetail = async (boardId) => {
   try {
     const board = await GET_DB()
       .collection(boardModel.BOARD_COLLECTION_NAME)
-      .findOne({ _id: new ObjectId(boardId) });
-    return board;
+      .aggregate([
+        {
+          $match: {
+            _id: new ObjectId(boardId),
+            _destroy: false,
+          },
+        },
+        {
+          $lookup: {
+            from: columnModel.COLUMN_COLLECTION_NAME,
+            localField: "_id",
+            foreignField: "boardId",
+            as: "columns",
+          },
+        },
+        {
+          $lookup: {
+            from: cardModel.CARD_COLLECTION_NAME,
+            localField: "_id",
+            foreignField: "boardId",
+            as: "cards",
+          },
+        },
+      ])
+      .toArray();
+    return board[0] || {};
   } catch (error) {
     throw new Error(error);
   }

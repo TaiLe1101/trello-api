@@ -1,5 +1,7 @@
 /* eslint-disable no-useless-catch */
 import { StatusCodes } from "http-status-codes";
+import { cloneDeep } from "lodash";
+
 import { boardRepository } from "~/repositories/boardRepository";
 import ApiError from "~/utils/ApiError";
 import { slugify } from "~/utils/formatters";
@@ -33,7 +35,17 @@ const getDetail = async (boardId) => {
     const board = await boardRepository.getDetail(boardId);
     if (!board) throw new ApiError(StatusCodes.NOT_FOUND, "Board not found");
 
-    return board;
+    const resBoard = cloneDeep(board);
+
+    resBoard.columns.forEach((column) => {
+      column.cards = resBoard.cards.filter(
+        (card) => card.columnId.toString() === column._id.toString()
+      );
+    });
+
+    delete resBoard.cards;
+
+    return resBoard;
   } catch (error) {
     throw error;
   }

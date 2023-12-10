@@ -1,12 +1,15 @@
 import { ObjectId } from "mongodb";
 import { GET_DB } from "~/config/mongodb";
-import { columnModel } from "~/models/columnModel";
+import {
+  COLUMN_COLLECTION_NAME,
+  COLUMN_COLLECTION_SCHEMA,
+} from "~/models/columnModel";
 import { modelValidate } from "~/validations/modelValidation";
 
 const createNew = async (data) => {
   try {
     const validData = await modelValidate.validateBeforeCreate(
-      columnModel.COLUMN_COLLECTION_SCHEMA,
+      COLUMN_COLLECTION_SCHEMA,
       data
     );
 
@@ -16,7 +19,7 @@ const createNew = async (data) => {
     };
 
     const createdColumn = await GET_DB()
-      .collection(columnModel.COLUMN_COLLECTION_NAME)
+      .collection(COLUMN_COLLECTION_NAME)
       .insertOne(newColumnToAdd);
     return createdColumn;
   } catch (error) {
@@ -27,7 +30,7 @@ const createNew = async (data) => {
 const findOneById = async (id) => {
   try {
     const column = await GET_DB()
-      .collection(columnModel.COLUMN_COLLECTION_NAME)
+      .collection(COLUMN_COLLECTION_NAME)
       .findOne({ _id: new ObjectId(id) });
     return column;
   } catch (error) {
@@ -38,7 +41,7 @@ const findOneById = async (id) => {
 const pushCardOrderIds = async (card) => {
   try {
     const result = await GET_DB()
-      .collection(columnModel.COLUMN_COLLECTION_NAME)
+      .collection(COLUMN_COLLECTION_NAME)
       .findOneAndUpdate(
         {
           _id: new ObjectId(card.columnId),
@@ -52,7 +55,7 @@ const pushCardOrderIds = async (card) => {
           returnDocument: "after",
         }
       );
-    return result.value || null;
+    return result || null;
   } catch (error) {
     throw new Error(error);
   }

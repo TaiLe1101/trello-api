@@ -8,6 +8,8 @@ Router.route("/")
   .get(boardController.getAllBoards)
   .post(boardValidation.createNew, boardController.createNew);
 
-Router.route("/:id").get(boardController.getDetail).put();
+Router.route("/:id")
+  .get(boardController.getDetail)
+  .put(boardValidation.update, boardController.update);
 
 export const boardRoute = Router;

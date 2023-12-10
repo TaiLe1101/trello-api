@@ -2,8 +2,8 @@ import Joi from "joi";
 import { OBJECT_ID_RULE, OBJECT_ID_RULE_MESSAGE } from "~/utils/constants";
 
 // Define Collection (name & schema)
-const COLUMN_COLLECTION_NAME = "columns";
-const COLUMN_COLLECTION_SCHEMA = Joi.object({
+export const COLUMN_COLLECTION_NAME = "columns";
+export const COLUMN_COLLECTION_SCHEMA = Joi.object({
   boardId: Joi.string()
     .required()
     .pattern(OBJECT_ID_RULE)
@@ -18,8 +18,3 @@ const COLUMN_COLLECTION_SCHEMA = Joi.object({
   updatedAt: Joi.date().timestamp("javascript").default(null),
   _destroy: Joi.boolean().default(false),
 });
-
-export const columnModel = {
-  COLUMN_COLLECTION_NAME,
-  COLUMN_COLLECTION_SCHEMA,
-};

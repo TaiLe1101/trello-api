@@ -1,15 +1,18 @@
 import { ObjectId } from "mongodb";
 
 import { GET_DB } from "~/config/mongodb";
-import { boardModel } from "~/models/boardModel";
-import { cardModel } from "~/models/cardModel";
-import { columnModel } from "~/models/columnModel";
+import {
+  BOARD_COLLECTION_NAME,
+  BOARD_COLLECTION_SCHEMA,
+} from "~/models/boardModel";
+import { CARD_COLLECTION_NAME } from "~/models/cardModel";
+import { COLUMN_COLLECTION_NAME } from "~/models/columnModel";
 import { modelValidate } from "~/validations/modelValidation";
 
 const getAllBoards = async () => {
   try {
     const boards = await GET_DB()
-      .collection(boardModel.BOARD_COLLECTION_NAME)
+      .collection(BOARD_COLLECTION_NAME)
       .find()
       .toArray();
 
@@ -22,12 +25,12 @@ const getAllBoards = async () => {
 const createNew = async (data) => {
   try {
     const validData = await modelValidate.validateBeforeCreate(
-      boardModel.BOARD_COLLECTION_SCHEMA,
+      BOARD_COLLECTION_SCHEMA,
       data
     );
 
     const createdBoard = await GET_DB()
-      .collection(boardModel.BOARD_COLLECTION_NAME)
+      .collection(BOARD_COLLECTION_NAME)
       .insertOne(validData);
     const getNewBoard = await findOneById(createdBoard.insertedId.toString());
     return getNewBoard;
@@ -39,7 +42,7 @@ const createNew = async (data) => {
 const findOneById = async (id) => {
   try {
     const board = await GET_DB()
-      .collection(boardModel.BOARD_COLLECTION_NAME)
+      .collection(BOARD_COLLECTION_NAME)
       .findOne({ _id: new ObjectId(id) });
     return board;
   } catch (error) {
@@ -50,7 +53,7 @@ const findOneById = async (id) => {
 const getDetail = async (boardId) => {
   try {
     const board = await GET_DB()
-      .collection(boardModel.BOARD_COLLECTION_NAME)
+      .collection(BOARD_COLLECTION_NAME)
       .aggregate([
         {
           $match: {
@@ -60,7 +63,7 @@ const getDetail = async (boardId) => {
         },
         {
           $lookup: {
-            from: columnModel.COLUMN_COLLECTION_NAME,
+            from: COLUMN_COLLECTION_NAME,
             localField: "_id",
             foreignField: "boardId",
             as: "columns",
@@ -68,7 +71,7 @@ const getDetail = async (boardId) => {
         },
         {
           $lookup: {
-            from: cardModel.CARD_COLLECTION_NAME,
+            from: CARD_COLLECTION_NAME,
             localField: "_id",
             foreignField: "boardId",
             as: "cards",
@@ -85,7 +88,7 @@ const getDetail = async (boardId) => {
 const pushColumnOrderIds = async (column) => {
   try {
     const result = await GET_DB()
-      .collection(boardModel.BOARD_COLLECTION_NAME)
+      .collection(BOARD_COLLECTION_NAME)
       .findOneAndUpdate(
         {
           _id: new ObjectId(column.boardId),
@@ -99,7 +102,33 @@ const pushColumnOrderIds = async (column) => {
           returnDocument: "after",
         }
       );
-    return result.value || null;
+    return result || null;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+const update = async (boardId, updateData) => {
+  try {
+    Object.keys(updateData).forEach((fieldName) => {
+      if (modelValidate.INVALID_UPDATE_FIELDS.includes(fieldName))
+        delete updateData[fieldName];
+    });
+
+    const result = await GET_DB()
+      .collection(BOARD_COLLECTION_NAME)
+      .findOneAndUpdate(
+        {
+          _id: new ObjectId(boardId),
+        },
+        {
+          $set: updateData,
+        },
+        {
+          returnDocument: "after",
+        }
+      );
+    return result || null;
   } catch (error) {
     throw new Error(error);
   }
@@ -111,4 +140,5 @@ export const boardRepository = {
   getAllBoards,
   getDetail,
   pushColumnOrderIds,
+  update,
 };

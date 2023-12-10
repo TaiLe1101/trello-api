@@ -1,4 +1,5 @@
 import { ObjectId } from "mongodb";
+
 import { GET_DB } from "~/config/mongodb";
 import { boardModel } from "~/models/boardModel";
 import { cardModel } from "~/models/cardModel";
@@ -81,9 +82,33 @@ const getDetail = async (boardId) => {
   }
 };
 
+const pushColumnOrderIds = async (column) => {
+  try {
+    const result = await GET_DB()
+      .collection(boardModel.BOARD_COLLECTION_NAME)
+      .findOneAndUpdate(
+        {
+          _id: new ObjectId(column.boardId),
+        },
+        {
+          $push: {
+            columnOrderIds: new ObjectId(column._id),
+          },
+        },
+        {
+          returnDocument: "after",
+        }
+      );
+    return result.value || null;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 export const boardRepository = {
   createNew,
   findOneById,
   getAllBoards,
   getDetail,
+  pushColumnOrderIds,
 };

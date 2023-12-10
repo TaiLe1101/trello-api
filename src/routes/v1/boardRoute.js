@@ -1,6 +1,5 @@
-// DevT | index file
 import express from "express";
-import { boardController } from "~/controllers/boardsController";
+import { boardController } from "~/controllers/boardController";
 import { boardValidation } from "~/validations/boardValidation";
 
 const Router = express.Router();
@@ -11,4 +10,4 @@ Router.route("/")
 
 Router.route("/:id").get(boardController.getDetail).put();
 
-export const boardRoutes = Router;
+export const boardRoute = Router;

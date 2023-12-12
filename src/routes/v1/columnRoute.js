@@ -8,4 +8,8 @@ Router.route("/")
   .get()
   .post(columnValidation.createNew, columnController.createNew);
 
+Router.route("/:id")
+  .get()
+  .put(columnValidation.update, columnController.update);
+
 export const columnRoute = Router;

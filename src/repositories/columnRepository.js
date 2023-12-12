@@ -3,6 +3,7 @@ import { GET_DB } from "~/config/mongodb";
 import {
   COLUMN_COLLECTION_NAME,
   COLUMN_COLLECTION_SCHEMA,
+  INVALID_UPDATE_COLUMN_FIELDS,
 } from "~/models/columnModel";
 import { modelValidate } from "~/validations/modelValidation";
 
@@ -61,8 +62,35 @@ const pushCardOrderIds = async (card) => {
   }
 };
 
+const update = async (columnId, updateData) => {
+  try {
+    Object.keys(updateData).forEach((fieldName) => {
+      if (INVALID_UPDATE_COLUMN_FIELDS.includes(fieldName))
+        delete updateData[fieldName];
+    });
+
+    const result = await GET_DB()
+      .collection(COLUMN_COLLECTION_NAME)
+      .findOneAndUpdate(
+        {
+          _id: new ObjectId(columnId),
+        },
+        {
+          $set: updateData,
+        },
+        {
+          returnDocument: "after",
+        }
+      );
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 export const columnRepository = {
   createNew,
   findOneById,
   pushCardOrderIds,
+  update,
 };
